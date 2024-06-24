@@ -32,6 +32,7 @@ jobs:
       - name: Copy build.zip to Go environment
         run: cp frontend/build.zip backend/
   build-executable-file:
+    runs-on: ubuntu-latest
     steps:
       - name: Gen Golang static code
         run: cd backend;go run main.go build;
