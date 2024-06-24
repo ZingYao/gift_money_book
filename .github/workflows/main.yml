@@ -37,34 +37,34 @@ jobs:
         run: cd backend;go run main.go build;
 
       - name: Go Build Windows Amd64
-        run: GOARCH=amd64 GOOS=windows cd backend; go build -o ../电子礼金簿.windows.amd64.exe main.go
+        run: cd backend; GOARCH=amd64 GOOS=windows go build -o ../gift_money_book.windows.amd64.exe main.go
 
       - name: Go Build Windows 385
-        run: GOARCH=386 GOOS=windows cd backend; go build -o ../电子礼金簿.windows.386.exe main.go
+        run: cd backend; GOARCH=386 GOOS=windows go build -o ../gift_money_book.windows.386.exe main.go
 
       - name: Go Build Windows arm
-        run: GOARCH=arm GOOS=windows cd backend; go build -o ../电子礼金簿.windows.arm.exe main.go
+        run: cd backend; GOARCH=arm GOOS=windows go build -o ../gift_money_book.windows.arm.exe main.go
 
       - name: Go Build Windows arm64
-        run: GOARCH=arm64 GOOS=windows cd backend; go build -o ../电子礼金簿.windows.arm64.exe main.go
+        run: cd backend; GOARCH=arm64 GOOS=windows go build -o ../gift_money_book.windows.arm64.exe main.go
 
       - name: Go Build Darwin arm64
-        run: GOARCH=arm64 GOOS=darwin cd backend; go build -o ../电子礼金簿.macos.arm64 main.go
+        run: cd backend; GOARCH=arm64 GOOS=darwin go build -o ../gift_money_book.macos.arm64 main.go
 
       - name: Go Build Darwin amd64
-        run: GOARCH=amd64 GOOS=darwin cd backend; go build -o ../电子礼金簿.macos.amd64 main.go
+        run: cd backend; GOARCH=amd64 GOOS=darwin go build -o ../gift_money_book.macos.amd64 main.go
 
       - name: Go Build Linux 386
-        run: GOARCH=386 GOOS=linux cd backend; go build -o ../电子礼金簿.linux.386 main.go
+        run: cd backend; GOARCH=386 GOOS=linux go build -o ../gift_money_book.linux.386 main.go
 
       - name: Go Build Linux amd64
-        run: GOARCH=amd64 GOOS=linux cd backend; go build -o ../电子礼金簿.linux.amd64 main.go
+        run: cd backend; GOARCH=amd64 GOOS=linux go build -o ../gift_money_book.linux.amd64 main.go
 
       - name: Go Build Linux arm
-        run: GOARCH=arm GOOS=linux cd backend; go build -o ../电子礼金簿.linux.arm main.go
+        run: cd backend; GOARCH=arm GOOS=linux go build -o ../gift_money_book.linux.arm main.go
 
       - name: Go Build Linux arm64
-        run: GOARCH=arm64 GOOS=linux cd backend; go build -o ../电子礼金簿.linux.arm64 main.go
+        run: cd backend; GOARCH=arm64 GOOS=linux go build -o ../gift_money_book.linux.arm64 main.go
 
       - name: Create Release
         id: create_release
@@ -82,8 +82,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: 电子礼金簿.windows.386.exe
-          asset_name: 电子礼金簿.windows.386.exe
+          asset_path: gift_money_book.windows.386.exe
+          asset_name: gift_money_book.windows.386.exe
           asset_content_type: application/octet-stream
 
       - name: Upload Asset Windows amd64
@@ -92,8 +92,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: 电子礼金簿.windows.amd64.exe
-          asset_name: 电子礼金簿.windows.amd64.exe
+          asset_path: gift_money_book.windows.amd64.exe
+          asset_name: gift_money_book.windows.amd64.exe
           asset_content_type: application/octet-stream
 
       - name: Upload Asset Windows arm
@@ -102,8 +102,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: 电子礼金簿.windows.arm.exe
-          asset_name: 电子礼金簿.windows.arm.exe
+          asset_path: gift_money_book.windows.arm.exe
+          asset_name: gift_money_book.windows.arm.exe
           asset_content_type: application/octet-stream
 
       - name: Upload Asset Windows arm64
@@ -112,8 +112,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: 电子礼金簿.windows.arm64.exe
-          asset_name: 电子礼金簿.windows.arm64.exe
+          asset_path: gift_money_book.windows.arm64.exe
+          asset_name: gift_money_book.windows.arm64.exe
           asset_content_type: application/octet-stream
 
       - name: Upload Asset Darwin arm64
@@ -122,8 +122,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: 电子礼金簿.macos.arm64
-          asset_name: 电子礼金簿.macos.arm64
+          asset_path: gift_money_book.macos.arm64
+          asset_name: gift_money_book.macos.arm64
           asset_content_type: application/octet-stream
 
       - name: Upload Asset Darwin amd64
@@ -132,8 +132,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: 电子礼金簿.macos.amd64
-          asset_name: 电子礼金簿.macos.amd64
+          asset_path: gift_money_book.macos.amd64
+          asset_name: gift_money_book.macos.amd64
           asset_content_type: application/octet-stream
 
       - name: Upload Asset Linux 386
@@ -142,8 +142,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: 电子礼金簿.linux.386
-          asset_name: 电子礼金簿.linux.386
+          asset_path: gift_money_book.linux.386
+          asset_name: gift_money_book.linux.386
           asset_content_type: application/octet-stream
 
       - name: Upload Asset Linux amd64
@@ -152,8 +152,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: 电子礼金簿.linux.amd64
-          asset_name: 电子礼金簿.linux.amd64
+          asset_path: gift_money_book.linux.amd64
+          asset_name: gift_money_book.linux.amd64
           asset_content_type: application/octet-stream
 
       - name: Upload Asset Windows arm
@@ -162,8 +162,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: 电子礼金簿.linux.arm
-          asset_name: 电子礼金簿.linux.arm
+          asset_path: gift_money_book.linux.arm
+          asset_name: gift_money_book.linux.arm
           asset_content_type: application/octet-stream
 
       - name: Upload Asset Windows arm64
@@ -172,6 +172,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: 电子礼金簿.linux.arm64
-          asset_name: 电子礼金簿.linux.arm64
+          asset_path: gift_money_book.linux.arm64
+          asset_name: gift_money_book.linux.arm64
           asset_content_type: application/octet-stream
