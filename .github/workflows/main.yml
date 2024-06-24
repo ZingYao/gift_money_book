@@ -122,8 +122,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: 电子礼金簿.darwin.arm64
-          asset_name: 电子礼金簿.darwin.arm64
+          asset_path: 电子礼金簿.macos.arm64
+          asset_name: 电子礼金簿.macos.arm64
           asset_content_type: application/octet-stream
 
       - name: Upload Asset Darwin amd64
@@ -132,8 +132,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: 电子礼金簿.darwin.amd64
-          asset_name: 电子礼金簿.darwin.amd64
+          asset_path: 电子礼金簿.macos.amd64
+          asset_name: 电子礼金簿.macos.amd64
           asset_content_type: application/octet-stream
 
       - name: Upload Asset Linux 386
