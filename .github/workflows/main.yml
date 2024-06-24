@@ -18,7 +18,7 @@ jobs:
           node-version: '18.*'
 
       - name: Build in Node
-        run: cd frontend; run build
+        run: cd frontend; npm run build
 
       - name: Setup Go
         uses: actions/setup-go@v2
@@ -60,3 +60,66 @@ jobs:
         
       - name: Go build linux arm64
         run: GOARCH=arm64 GOOS=linux go build main.go -o 电子礼金簿.linux.arm64
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset Windows 386
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: backend/电子礼金簿.windows.386.exe
+            asset_name: 电子礼金簿.windows.386.exe
+
+      - name: Upload Release Asset Windows amd64
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: backend/电子礼金簿.windows.amd64.exe
+            asset_name: 电子礼金簿.windows.amd64.exe
+
+      - name: Upload Release Asset Windows arm
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: backend/电子礼金簿.windows.arm.exe
+            asset_name: 电子礼金簿.windows.arm.exe
+
+      - name: Upload Release Asset Windows arm64
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: backend/电子礼金簿.windows.arm64.exe
+            asset_name: 电子礼金簿.windows.arm64.exe
+
+      - name: Upload Release Asset Mac arm64
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: backend/电子礼金簿.mac.arm64.exe
+            asset_name: 电子礼金簿.mac.arm64.exe
+
+      - name: Upload Release Asset Mac amd64
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: backend/电子礼金簿.mac.amd64.exe
+            asset_name: 电子礼金簿.mac.amd64.exe
