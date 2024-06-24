@@ -70,56 +70,13 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset Windows 386
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: backend/电子礼金簿.windows.386.exe
-            asset_name: 电子礼金簿.windows.386.exe
 
-      - name: Upload Release Asset Windows amd64
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: backend/电子礼金簿.windows.amd64.exe
-            asset_name: 电子礼金簿.windows.amd64.exe
-
-      - name: Upload Release Asset Windows arm
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: backend/电子礼金簿.windows.arm.exe
-            asset_name: 电子礼金簿.windows.arm.exe
-
-      - name: Upload Release Asset Windows arm64
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: backend/电子礼金簿.windows.arm64.exe
-            asset_name: 电子礼金簿.windows.arm64.exe
-
-      - name: Upload Release Asset Mac arm64
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: backend/电子礼金簿.mac.arm64.exe
-            asset_name: 电子礼金簿.mac.arm64.exe
-
-      - name: Upload Release Asset Mac amd64
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: backend/电子礼金簿.mac.amd64.exe
-            asset_name: 电子礼金簿.mac.amd64.exe
+      - name: Release Upload
+        uses: d1ceward/draft-assets-release-action@v2.1.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            电子礼金簿.windows.386.exe
+            电子礼金簿.windows.amd64.exe
+            电子礼金簿.windows.arm.exe
+            电子礼金簿.windows.arm64.exe
