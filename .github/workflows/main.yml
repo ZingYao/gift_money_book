@@ -9,12 +9,13 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  checkout-code:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+  build-frontend:
+    steps:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
@@ -30,7 +31,8 @@ jobs:
 
       - name: Copy build.zip to Go environment
         run: cp frontend/build.zip backend/
-
+  build-executable-file:
+    steps:
       - name: Gen Golang static code
         run: cd backend;go run main.go build;
 
@@ -51,16 +53,16 @@ jobs:
 
       - name: Go Build Darwin amd64
         run: GOARCH=amd64 GOOS=darwin cd backend; go build -o ../电子礼金簿.macos.amd64 main.go
-        
+
       - name: Go Build Linux 386
         run: GOARCH=386 GOOS=linux cd backend; go build -o ../电子礼金簿.linux.386 main.go
-        
+
       - name: Go Build Linux amd64
         run: GOARCH=amd64 GOOS=linux cd backend; go build -o ../电子礼金簿.linux.amd64 main.go
-        
+
       - name: Go Build Linux arm
         run: GOARCH=arm GOOS=linux cd backend; go build -o ../电子礼金簿.linux.arm main.go
-        
+
       - name: Go Build Linux arm64
         run: GOARCH=arm64 GOOS=linux cd backend; go build -o ../电子礼金簿.linux.arm64 main.go
   publish:
