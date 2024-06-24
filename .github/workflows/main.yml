@@ -65,7 +65,7 @@ jobs:
         run: GOARCH=arm64 GOOS=linux cd backend; go build -o ../电子礼金簿.linux.arm64 main.go
   publish:
     permissions:
-      pull_requests: write
+      pull-requests: write
     needs: build
     runs-on: ubuntu-latest
     steps:
