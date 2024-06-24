@@ -8,10 +8,14 @@ import CollapsePanel from "tdesign-react/es/collapse/CollapsePanel";
 import ExportJsonExcel from "js-export-excel"
 import {digitUppercase} from "pixiu-number-toolkit";
 import moment from "moment";
+import PDFDocument from "./pdf/PDF";
+import {PDFDownloadLink} from "@react-pdf/renderer";
+import ReactDOM from 'react-dom';
 
 function App() {
     const [flushTs, setFlushTs] = useState(0)
     const [needRepay, setNeedRepay] = useState(false)
+    const [pdfDocument, setPdfDocument] = useState((<PDFDocument header={[]} filter={[]} data={[]}/>))
 
     useEffect(() => {
         // 设置是否需要返礼
@@ -90,9 +94,39 @@ function App() {
                 }
             ]
         }
-        console.log('options',options)
+        console.log('options', options)
         const toExcel = new ExportJsonExcel(options);
         toExcel.saveExcel()
+    }
+
+    const exportBook = () => {
+        var sheetHeader: string[] = []
+        const data = JSON.parse(localStorage.getItem('pageData') ?? '[]')
+        var sheetData: any[] = []
+        var sheetFilter: any[] = []
+        if (needRepay) {
+            sheetHeader = ["序号", "姓名", "收礼金额大写", "收礼金额", "收礼方式", "返礼金额大写", "返礼金额", "返礼方式", "收礼方", "备注"]
+            sheetFilter = ["id", "name", "amountChinese", "amount", "paymentMethod", "repayAmountChinese", "repayAmount", "repayMethod", "platform", "remark"]
+            for (const key in data) {
+                let tempData = data[key]
+                tempData.amountChinese = digitUppercase(tempData.amount ?? 0)
+                tempData.repayAmountChinese = digitUppercase(tempData.repayAmount ?? 0)
+                sheetData.push(tempData)
+            }
+        } else {
+            sheetHeader = ["序号", "姓名", "收礼金额大写", "收礼金额", "收礼方式", "收礼方", "备注"]
+            sheetFilter = ["id", "name", "amountChinese", "amount", "paymentMethod", "platform", "remark"]
+            for (const key in data) {
+                let tempData = data[key]
+                tempData.amountChinese = digitUppercase(tempData.amount ?? 0)
+                delete tempData.repayAmount
+                delete tempData.repayMethod
+                sheetData.push(tempData)
+            }
+        }
+        setPdfDocument(<PDFDocument filter={sheetFilter} header={sheetHeader} data={sheetData}/>)
+        ReactDOM.render(<PDFDocument filter={sheetFilter} header={sheetHeader} data={sheetData}/>,document.getElementById("draw"))
+        console.log('pdfDocument',pdfDocument)
     }
 
     const resetData = () => {
@@ -147,6 +181,11 @@ function App() {
                     style={{marginLeft: '8px'}}
                     onClick={exportData}
                 >导出数据</Button>
+                <PDFDownloadLink document={pdfDocument} onClick={exportBook} fileName="礼金簿.pdf">
+                    <Button
+                        style={{marginLeft: '8px'}}
+                    >导出礼金簿</Button>
+                </PDFDownloadLink>
                 <Divider align="center">礼金录入系统</Divider>
             </div>
             <Collapse>
@@ -155,6 +194,7 @@ function App() {
                 </CollapsePanel>
             </Collapse>
             <DataTable ts={flushTs}/>
+            <div id="draw" ></div>
         </>
     );
 }
