@@ -15,6 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
   build-frontend:
+    runs-on: ubuntu-latest
     steps:
       - name: Setup Node
         uses: actions/setup-node@v2
