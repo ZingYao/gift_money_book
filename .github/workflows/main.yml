@@ -31,45 +31,53 @@ jobs:
       - name: Gen Golang static code
         run: cd backend;go run main.go build;
 
-      - name: cd backend; go build windows amd64
+      - name: Go Build Windows Amd64
         run: GOARCH=amd64 GOOS=windows cd backend; go build -o 电子礼金簿.windows.amd64.exe main.go
 
-      - name: cd backend; go build windows 386
+      - name: Go Build Windows 385
         run: GOARCH=386 GOOS=windows cd backend; go build -o 电子礼金簿.windows.386.exe main.go
 
-      - name: cd backend; go build windows arm
+      - name: Go Build Windows arm
         run: GOARCH=arm GOOS=windows cd backend; go build -o 电子礼金簿.windows.arm.exe main.go
 
-      - name: cd backend; go build windows arm64
+      - name: Go Build Windows arm64
         run: GOARCH=arm64 GOOS=windows cd backend; go build -o 电子礼金簿.windows.arm64.exe main.go
 
-      - name: cd backend; go build darwin arm64
+      - name: Go Build Darwin arm64
         run: GOARCH=arm64 GOOS=darwin cd backend; go build -o 电子礼金簿.macos.arm64 main.go
 
-      - name: cd backend; go build darwin amd64
+      - name: Go Build Darwin amd64
         run: GOARCH=amd64 GOOS=darwin cd backend; go build -o 电子礼金簿.macos.amd64 main.go
         
-      - name: cd backend; go build linux 386
+      - name: Go Build Linux 386
         run: GOARCH=386 GOOS=linux cd backend; go build -o 电子礼金簿.linux.386 main.go
         
-      - name: cd backend; go build linux amd64
+      - name: Go Build Linux amd64
         run: GOARCH=amd64 GOOS=linux cd backend; go build -o 电子礼金簿.linux.amd64 main.go
         
-      - name: cd backend; go build linux arm
+      - name: Go Build Linux arm
         run: GOARCH=arm GOOS=linux cd backend; go build -o 电子礼金簿.linux.arm main.go
         
-      - name: cd backend; go build linux arm64
+      - name: Go Build Linux arm64
         run: GOARCH=arm64 GOOS=linux cd backend; go build -o 电子礼金簿.linux.arm64 main.go
 
       - name: Create Release
-        id: create_release
         uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+          release_name: ${{ github.ref }}
+          body: "This is a release"
 
+      - name: Upload Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: backend/电子礼金簿.windows.386.exe
+          asset_name: 电子礼金簿.windows.386.exe
 
       - name: Release Upload
         uses: d1ceward/draft-assets-release-action@v2.1.0
