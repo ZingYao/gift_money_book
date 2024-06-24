@@ -76,7 +76,7 @@ jobs:
           release_name: ${{ github.ref }}
           body: "This is a release"
 
-      - name: Upload Asset
+      - name: Upload Asset Windows 386
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
@@ -86,18 +86,92 @@ jobs:
           asset_name: 电子礼金簿.windows.386.exe
           asset_content_type: application/octet-stream
 
-      - name: Release Upload
-        uses: d1ceward/draft-assets-release-action@v2.1.0
+      - name: Upload Asset Windows amd64
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
-          token: ${{ secrets.TOKEN }}
-          files: |
-            电子礼金簿.windows.386.exe
-            电子礼金簿.windows.amd64.exe
-            电子礼金簿.windows.arm.exe
-            电子礼金簿.windows.arm64.exe
-            电子礼金簿.macos.arm64
-            电子礼金簿.macos.amd64
-            电子礼金簿.linux.386
-            电子礼金簿.linux.amd64
-            电子礼金簿.linux.arm
-            电子礼金簿.linux.arm64
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: 电子礼金簿.windows.amd64.exe
+          asset_name: 电子礼金簿.windows.amd64.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload Asset Windows arm
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: 电子礼金簿.windows.arm.exe
+          asset_name: 电子礼金簿.windows.arm.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload Asset Windows arm64
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: 电子礼金簿.windows.arm64.exe
+          asset_name: 电子礼金簿.windows.arm64.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload Asset Darwin arm64
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: 电子礼金簿.darwin.arm64
+          asset_name: 电子礼金簿.darwin.arm64
+          asset_content_type: application/octet-stream
+
+      - name: Upload Asset Darwin amd64
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: 电子礼金簿.darwin.amd64
+          asset_name: 电子礼金簿.darwin.amd64
+          asset_content_type: application/octet-stream
+
+      - name: Upload Asset Linux 386
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: 电子礼金簿.linux.386
+          asset_name: 电子礼金簿.linux.386
+          asset_content_type: application/octet-stream
+
+      - name: Upload Asset Linux amd64
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: 电子礼金簿.linux.amd64
+          asset_name: 电子礼金簿.linux.amd64
+          asset_content_type: application/octet-stream
+
+      - name: Upload Asset Windows arm
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: 电子礼金簿.linux.arm
+          asset_name: 电子礼金簿.linux.arm
+          asset_content_type: application/octet-stream
+
+      - name: Upload Asset Windows arm64
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: 电子礼金簿.linux.arm64
+          asset_name: 电子礼金簿.linux.arm64
+          asset_content_type: application/octet-stream
