@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 	"webCash/static"
@@ -101,7 +102,29 @@ func unzip(src []byte, dst string) error {
 }
 
 func openBrowser(url string) error {
+	switch runtime.GOOS {
+	case "windows":
+		return windowsOpenBrowser(url)
+	case "linux":
+		return linuxOpenBrowser(url)
+	case "darwin":
+		return macOpenBrowser(url)
+	}
+	return nil
+}
+
+func windowsOpenBrowser(url string) error {
 	// 使用 cmd 命令打开默认浏览器
 	cmd := exec.Command("cmd", "/c", "start", url)
+	return cmd.Run()
+}
+
+func macOpenBrowser(url string) error {
+	cmd := exec.Command("open", url)
+	return cmd.Run()
+}
+
+func linuxOpenBrowser(url string) error {
+	cmd := exec.Command("xdg-open", url)
 	return cmd.Run()
 }
