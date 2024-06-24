@@ -187,3 +187,8 @@ jobs:
           asset_path: gift_money_book.linux.arm64
           asset_name: gift_money_book.linux.arm64
           asset_content_type: application/octet-stream
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ls&pwd
+        run: ls;pwd
