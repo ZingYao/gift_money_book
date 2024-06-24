@@ -148,7 +148,8 @@ const DataTable = ({ts}: { ts: number }) => {
             retCols = retCols.concat([cols[dataIndex]])
         }
         return retCols
-    }, [displayColumns,pageData, editableId])
+        // eslint-disable-next-line
+    }, [platformOption, editableId, displayColumns])
 
     // 计算当前页总金额
     useEffect(() => {
@@ -220,6 +221,7 @@ const DataTable = ({ts}: { ts: number }) => {
             console.log('noNeedRepay',noNeedRepayColumns)
             setDisplayColumns(noNeedRepayColumns)
         }
+        // eslint-disable-next-line
     }, [ts])
 
     useEffect(()=> {
