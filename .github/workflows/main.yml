@@ -29,7 +29,7 @@ jobs:
         run: cp frontend/build.zip backend/
 
       - name: Gen Golang static code
-        run: cd backend;go run main build;
+        run: cd backend;go run main.go build;
 
       - name: cd backend; go build windows amd64
         run: GOARCH=amd64 GOOS=windows cd backend; go build -o 电子礼金簿.windows.amd64.exe main.go
