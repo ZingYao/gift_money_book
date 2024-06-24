@@ -29,37 +29,37 @@ jobs:
         run: cp frontend/build.zip backend/
 
       - name: Gen Golang static code
-        run: cd backend;go run main.go build
+        run: cd backend;go run main build;
 
-      - name: Go build windows amd64
-        run: GOARCH=amd64 GOOS=windows go build backend/main.go -o 电子礼金簿.windows.amd64.exe
+      - name: cd backend; go build windows amd64
+        run: GOARCH=amd64 GOOS=windows cd backend; go build -o 电子礼金簿.windows.amd64.exe main.go
 
-      - name: Go build windows 386
-        run: GOARCH=386 GOOS=windows go build backend/main.go -o 电子礼金簿.windows.386.exe
+      - name: cd backend; go build windows 386
+        run: GOARCH=386 GOOS=windows cd backend; go build -o 电子礼金簿.windows.386.exe main.go
 
-      - name: Go build windows arm
-        run: GOARCH=arm GOOS=windows go build backend/main.go -o 电子礼金簿.windows.arm.exe
+      - name: cd backend; go build windows arm
+        run: GOARCH=arm GOOS=windows cd backend; go build -o 电子礼金簿.windows.arm.exe main.go
 
-      - name: Go build windows arm64
-        run: GOARCH=arm64 GOOS=windows go build backend/main.go -o 电子礼金簿.windows.arm64.exe
+      - name: cd backend; go build windows arm64
+        run: GOARCH=arm64 GOOS=windows cd backend; go build -o 电子礼金簿.windows.arm64.exe main.go
 
-      - name: Go build darwin arm64
-        run: GOARCH=arm64 GOOS=darwin go build backend/main.go -o 电子礼金簿.macos.arm64
+      - name: cd backend; go build darwin arm64
+        run: GOARCH=arm64 GOOS=darwin cd backend; go build -o 电子礼金簿.macos.arm64 main.go
 
-      - name: Go build darwin amd64
-        run: GOARCH=amd64 GOOS=darwin go build backend/main.go -o 电子礼金簿.macos.amd64
+      - name: cd backend; go build darwin amd64
+        run: GOARCH=amd64 GOOS=darwin cd backend; go build -o 电子礼金簿.macos.amd64 main.go
         
-      - name: Go build linux 386
-        run: GOARCH=386 GOOS=linux go build backend/main.go -o 电子礼金簿.linux.386
+      - name: cd backend; go build linux 386
+        run: GOARCH=386 GOOS=linux cd backend; go build -o 电子礼金簿.linux.386 main.go
         
-      - name: Go build linux amd64
-        run: GOARCH=amd64 GOOS=linux go build backend/main.go -o 电子礼金簿.linux.amd64
+      - name: cd backend; go build linux amd64
+        run: GOARCH=amd64 GOOS=linux cd backend; go build -o 电子礼金簿.linux.amd64 main.go
         
-      - name: Go build linux arm
-        run: GOARCH=arm GOOS=linux go build backend/main.go -o 电子礼金簿.linux.arm
+      - name: cd backend; go build linux arm
+        run: GOARCH=arm GOOS=linux cd backend; go build -o 电子礼金簿.linux.arm main.go
         
-      - name: Go build linux arm64
-        run: GOARCH=arm64 GOOS=linux go build backend/main.go -o 电子礼金簿.linux.arm64
+      - name: cd backend; go build linux arm64
+        run: GOARCH=arm64 GOOS=linux cd backend; go build -o 电子礼金簿.linux.arm64 main.go
 
       - name: Create Release
         id: create_release
@@ -76,7 +76,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
-            电子礼金簿.windows.386.exe
-            电子礼金簿.windows.amd64.exe
-            电子礼金簿.windows.arm.exe
-            电子礼金簿.windows.arm64.exe
+            backend/电子礼金簿.windows.386.exe
+            backend/电子礼金簿.windows.amd64.exe
+            backend/电子礼金簿.windows.arm.exe
+            backend/电子礼金簿.windows.arm64.exe
