@@ -14,8 +14,14 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
+      - name: ls&pwd
+        run: ls;pwd
+
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: ls&pwd
+        run: ls;pwd
 
       - name: Setup Node
         uses: actions/setup-node@v2

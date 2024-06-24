@@ -3,6 +3,7 @@ const archiver = require('archiver');
 
 // 定义生成压缩包的路径和文件名
 const outputPath = 'build.zip';
+
 // 获取当前项目的路径
 const projectPath = process.cwd();
 
@@ -26,7 +27,7 @@ archive.on('error', (err) => {
 archive.pipe(output);
 
 // 添加要压缩的文件或文件夹
-archive.directory(projectPath + '/build', false);
+archive.directory(projectPath + '/build', 'build'); // 修改此处，指定添加到压缩包中的目录名称为 'build'
 
 // 完成压缩
 archive.finalize();
