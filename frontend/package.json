@@ -1,5 +1,5 @@
 {
-  "name": "untitled",
+  "name": "gift-money-book",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && node buildScript.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -45,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "archiver": "^7.0.1",
     "js-export-excel": "^1.1.4"
   }
 }
