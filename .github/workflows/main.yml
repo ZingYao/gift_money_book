@@ -84,6 +84,7 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: backend/电子礼金簿.windows.386.exe
           asset_name: 电子礼金簿.windows.386.exe
+          asset_content_type: application/octet-stream
 
       - name: Release Upload
         uses: d1ceward/draft-assets-release-action@v2.1.0
