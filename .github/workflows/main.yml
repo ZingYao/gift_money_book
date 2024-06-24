@@ -85,8 +85,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
+          release_name: Release:${{ github.ref }}
           body: "This is a release"
+          draft: true
 
       - name: Upload Asset Windows 386
         uses: actions/upload-release-asset@v1

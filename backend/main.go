@@ -50,10 +50,14 @@ func Static() []byte {
 	}
 	// 解压缩文件
 
+	// 先删除文件夹
+	os.RemoveAll("./build")
 	err := unzip(static.Static(), "./")
 	if err != nil {
 		panic(err)
 	}
+    // 关闭时 删除文件夹
+    defer os.RemoveAll("./build")
 	r := gin.New()
 	r.Static("/", "./build")
 	go func() {
