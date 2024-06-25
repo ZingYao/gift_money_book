@@ -6,10 +6,11 @@ import {
 } from "tdesign-react";
 import {digitUppercase} from "pixiu-number-toolkit";
 import {useEffect, useMemo, useState} from "react";
+import {setLocalstorageItem} from "../common/utils";
 
 const needRepayColumns = ["id","name","amountChinese","amount","paymentMethod","repayAmountChinese","repayAmount","repayMethod","platform","remark","options"]
 const noNeedRepayColumns = ["id","name","amountChinese","amount","paymentMethod","platform","remark","options"]
-const DataTable = ({ts}: { ts: number }) => {
+const DataTable = () => {
     const [displayColumns,setDisplayColumns] = useState(needRepayColumns)
     const [needRepay, setNeedRepay] = useState(false)
     const [platformOption, setPlatformOption] = useState<{ label: string, value: string }[]>([])
@@ -82,12 +83,16 @@ const DataTable = ({ts}: { ts: number }) => {
                 }
             },
             {
-                colKey: 'repayAmountChinese', title: '返礼金额(大写)', cell: ({row}: { row: any }) => {
-                    return digitUppercase(row.repayAmount ?? 0);
+                colKey: 'repayAmountChinese', title: '返礼金额/数量(大写)', cell: ({row}: { row: any }) => {
+                    let content = digitUppercase(row.repayAmount ?? 0)
+                    if (row.repayMethod === '返卡') {
+                        content = content.replaceAll('元整','张')
+                    }
+                    return ;
                 }
             },
             {
-                colKey: 'repayAmount', title: '返礼金额(数字)', edit: {
+                colKey: 'repayAmount', title: '返礼金额/数量(数字)', edit: {
                     component: Input,
                     showEditIcon: false,
                     props: {
@@ -151,6 +156,51 @@ const DataTable = ({ts}: { ts: number }) => {
         // eslint-disable-next-line
     }, [platformOption, editableId, displayColumns])
 
+    window.addEventListener('storage',(event) => {
+        switch(event.key) {
+            case 'pageData':
+                const pd = JSON.parse(event.newValue ?? '[]')
+                setPageData(pd)
+                setPageInfo({...pageInfo, total: pd.length})
+                // 计算统计信息
+                calcTotalAmount()
+                setLocalstorageItem('exportData',JSON.stringify(getExportData()))
+                break;
+            case 'platformOption':
+                setPlatformOption(JSON.parse(event.newValue ?? '[]'))
+                break
+            case 'needRepay':
+                if (event.newValue === 'true') {
+                    console.log('true')
+                    setNeedRepay(true)
+                    setDisplayColumns(needRepayColumns)
+                    setLocalstorageItem('exportData',JSON.stringify(getExportData()))
+                } else {
+                    console.log('false')
+                    setNeedRepay(false)
+                    setDisplayColumns(noNeedRepayColumns)
+                    setLocalstorageItem('exportData',JSON.stringify(getExportData()))
+                }
+        }
+    })
+
+    // 组件初始化
+    useEffect(() => {
+        const pd = JSON.parse(localStorage.getItem('pageData') ?? '[]')
+        setPageData(pd)
+        setPageInfo({...pageInfo, total: pd.length})
+        setPlatformOption(JSON.parse(localStorage.getItem('platformOption') ?? '[]'))
+        if (localStorage.getItem('needRepay') === 'true') {
+            setNeedRepay(true)
+            setDisplayColumns(needRepayColumns)
+        } else {
+            setNeedRepay(false)
+            setDisplayColumns(noNeedRepayColumns)
+        }
+        calcTotalAmount()
+        setLocalstorageItem('exportData',JSON.stringify(getExportData()))
+    }, []);
+
     // 计算当前页总金额
     useEffect(() => {
         let pta = {
@@ -202,29 +252,7 @@ const DataTable = ({ts}: { ts: number }) => {
         setPageTotalAmount(pta)
     }, [pageInfo,pageData])
 
-    useEffect(() => {
-        const pageData = localStorage.getItem("pageData") ?? '[]'
-        const pd = JSON.parse(pageData)
-        setPageData(pd)
-        setPageInfo({...pageInfo, total: pd.length})
-
-        const spo = localStorage.getItem("platformOption") ?? '[]'
-        setPlatformOption(JSON.parse(spo))
-
-        // 设置是否需要返礼
-        if (localStorage.getItem('needRepay') === 'true') {
-            console.log('needRepay',needRepayColumns)
-            setNeedRepay(true)
-            setDisplayColumns(needRepayColumns)
-        } else {
-            setNeedRepay(false)
-            console.log('noNeedRepay',noNeedRepayColumns)
-            setDisplayColumns(noNeedRepayColumns)
-        }
-        // eslint-disable-next-line
-    }, [ts])
-
-    useEffect(()=> {
+    const calcTotalAmount = () => {
         let tm = {
             collect: {total: 0, cash: 0, wechat: 0, alipay: 0, other: 0},
             repay: {total: 0, card: 0, cash: 0, wechat: 0, alipay: 0, other: 0}
@@ -266,7 +294,40 @@ const DataTable = ({ts}: { ts: number }) => {
             }
         }
         setTotalAmount(tm)
-    },[pageData])
+    }
+
+
+
+    const getExportData = () => {
+        var sheetHeader: string[] = []
+        const data:{[key:string]:any} = JSON.parse(localStorage.getItem('pageData') ?? '[]')
+        var sheetData: any[] = []
+        var sheetFilter: any[] = []
+        if (localStorage.getItem('needRepay') === 'true') {
+            sheetHeader = ["序号", "姓名", "收礼金额大写", "收礼金额", "收礼方式", "返礼金额/数量大写", "返礼金额/数量", "返礼方式", "收礼方", "备注"]
+            sheetFilter = ["id", "name", "amountChinese", "amount", "paymentMethod", "repayAmountChinese", "repayAmount", "repayMethod", "platform", "remark"]
+            for (const key in data) {
+                let tempData = data[key]
+                tempData.amountChinese = digitUppercase(tempData.amount ?? 0)
+                tempData.repayAmountChinese = digitUppercase(tempData.repayAmount ?? 0)
+                if (tempData.repayMethod === '返卡') {
+                    tempData.repayAmountChinese = tempData.repayAmountChinese.replaceAll("元整","张")
+                }
+                sheetData.push(tempData)
+            }
+        } else {
+            sheetHeader = ["序号", "姓名", "收礼金额大写", "收礼金额", "收礼方式", "收礼方", "备注"]
+            sheetFilter = ["id", "name", "amountChinese", "amount", "paymentMethod", "platform", "remark"]
+            for (const key in data) {
+                let tempData = data[key]
+                tempData.amountChinese = digitUppercase(tempData.amount ?? 0)
+                delete tempData.repayAmount
+                delete tempData.repayMethod
+                sheetData.push(tempData)
+            }
+        }
+        return [sheetHeader,sheetFilter,sheetData]
+    }
 
     const editRow = (e: any) => {
         let {id} = e.currentTarget.dataset;
@@ -285,8 +346,7 @@ const DataTable = ({ts}: { ts: number }) => {
         // @ts-ignore
         newData.repayAmount = parseInt(newData.repayAmount)
         pageData[dataIndex] = newData
-        localStorage.setItem('pageData', JSON.stringify(pageData))
-        setPageData(pageData)
+        setLocalstorageItem('pageData', JSON.stringify(pageData))
         cancelEdit({currentTarget: {dataset: {id}}})
         NotificationPlugin.success({
             title: '成功',
@@ -333,7 +393,7 @@ const DataTable = ({ts}: { ts: number }) => {
                     <span className="money-display">总金额:<span
                         className="money-number"> {digitUppercase(totalAmount.repay.total)}(￥{totalAmount.repay.total})</span></span>
                     <span className="money-display">返卡:<span
-                        className="money-number"> {digitUppercase(totalAmount.repay.card)}(￥{totalAmount.repay.card})</span></span>
+                        className="money-number"> {digitUppercase(totalAmount.repay.card).replaceAll('元整','张')}({totalAmount.repay.card})</span></span>
                     <span className="money-display">微信:<span
                         className="money-number"> {digitUppercase(totalAmount.repay.wechat)}(￥{totalAmount.repay.wechat})</span></span>
                     <span className="money-display">支付宝:<span
@@ -376,7 +436,7 @@ const DataTable = ({ts}: { ts: number }) => {
                             <span className="money-display">总金额:<span
                                 className="money-number"> {digitUppercase(pageTotalAmount.repay.total)}(￥{pageTotalAmount.repay.total})</span></span>
                             <span className="money-display">返卡:<span
-                                className="money-number"> {digitUppercase(pageTotalAmount.repay.card)}(￥{pageTotalAmount.repay.card})</span></span>
+                                className="money-number"> {digitUppercase(pageTotalAmount.repay.card).replaceAll('元整','张')}({pageTotalAmount.repay.card})</span></span>
                             <span className="money-display">微信:<span
                                 className="money-number"> {digitUppercase(pageTotalAmount.repay.wechat)}(￥{pageTotalAmount.repay.wechat})</span></span>
                             <span className="money-display">支付宝:<span

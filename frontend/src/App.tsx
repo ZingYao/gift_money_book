@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import {Button, Collapse, DialogPlugin, Divider, NotificationPlugin, Popconfirm, Switch} from "tdesign-react";
 import DataTable from "./table/DataTable";
@@ -6,34 +6,35 @@ import WriteData from "./write_data/WriteData";
 import CollapsePanel from "tdesign-react/es/collapse/CollapsePanel";
 // @ts-ignore
 import ExportJsonExcel from "js-export-excel"
-import {digitUppercase} from "pixiu-number-toolkit";
 import moment from "moment";
 import PDFDocument from "./pdf/PDF";
 import {PDFDownloadLink} from "@react-pdf/renderer";
 import ReactDOM from 'react-dom';
+import {setLocalstorageItem} from "./common/utils";
 
 function App() {
-    const [flushTs, setFlushTs] = useState(0)
     const [needRepay, setNeedRepay] = useState(false)
     const [pdfDocument, setPdfDocument] = useState((<PDFDocument header={[]} filter={[]} data={[]}/>))
+    const [exportData, setExportData] = useState([])
 
-    useEffect(() => {
-        // 设置是否需要返礼
-        if (localStorage.getItem('needRepay') === 'true') {
-            setNeedRepay(true)
-        } else {
-            setNeedRepay(false)
+
+    window.addEventListener('storage', (event) => {
+        switch (event.key) {
+            case 'needRepay':
+                if (event.newValue === 'true') {
+                    setNeedRepay(true)
+                } else {
+                    setNeedRepay(false)
+                }
+                break;
+            case 'exportData':
+                setExportData(JSON.parse(event.newValue ?? '[]'))
         }
-    }, [])
+    })
 
     const changeNeedRepay = (value: boolean) => {
         setNeedRepay(value)
-        localStorage.setItem('needRepay', String(value))
-        setFlushTsNow()
-    }
-
-    const setFlushTsNow = () => {
-        setFlushTs((new Date()).getTime())
+        setLocalstorageItem('needRepay', String(value))
     }
 
     const resetPlatform = () => {
@@ -41,12 +42,11 @@ function App() {
             header: '请确认',
             body: '点击确认将会删除所有已保存的收礼方(已存在的数据中的收礼方将被保留)！',
             onConfirm: () => {
-                localStorage.removeItem('platformOption');
+                setLocalstorageItem('platformOption','[]');
                 NotificationPlugin.success({
                     title: '成功',
                     content: '数据清空完成',
                 })
-                setFlushTsNow()
                 resetDialog.hide()
             },
             onCancel: () => {
@@ -58,31 +58,8 @@ function App() {
         })
     }
 
-    const exportData = () => {
-        var sheetHeader: string[] = []
-        const data = JSON.parse(localStorage.getItem('pageData') ?? '[]')
-        var sheetData: any[] = []
-        var sheetFilter: any[] = []
-        if (needRepay) {
-            sheetHeader = ["序号", "姓名", "收礼金额大写", "收礼金额", "收礼方式", "返礼金额大写", "返礼金额", "返礼方式", "收礼方", "备注"]
-            sheetFilter = ["id", "name", "amountChinese", "amount", "paymentMethod", "repayAmountChinese", "repayAmount", "repayMethod", "platform", "remark"]
-            for (const key in data) {
-                let tempData = data[key]
-                tempData.amountChinese = digitUppercase(tempData.amount ?? 0)
-                tempData.repayAmountChinese = digitUppercase(tempData.repayAmount ?? 0)
-                sheetData.push(tempData)
-            }
-        } else {
-            sheetHeader = ["序号", "姓名", "收礼金额大写", "收礼金额", "收礼方式", "收礼方", "备注"]
-            sheetFilter = ["id", "name", "amountChinese", "amount", "paymentMethod", "platform", "remark"]
-            for (const key in data) {
-                let tempData = data[key]
-                tempData.amountChinese = digitUppercase(tempData.amount ?? 0)
-                delete tempData.repayAmount
-                delete tempData.repayMethod
-                sheetData.push(tempData)
-            }
-        }
+    const exportExcel = () => {
+        const [sheetHeader, sheetFilter, sheetData] = exportData
         const options = {
             fileName: `礼金导出信息${moment().format('YYYY-MM-DD-HH-mm-ss')}.xlsx`,
             datas: [
@@ -99,47 +76,16 @@ function App() {
         toExcel.saveExcel()
     }
 
-    const exportBook = () => {
-        var sheetHeader: string[] = []
-        const data = JSON.parse(localStorage.getItem('pageData') ?? '[]')
-        var sheetData: any[] = []
-        var sheetFilter: any[] = []
-        if (needRepay) {
-            sheetHeader = ["序号", "姓名", "收礼金额大写", "收礼金额", "收礼方式", "返礼金额大写", "返礼金额", "返礼方式", "收礼方", "备注"]
-            sheetFilter = ["id", "name", "amountChinese", "amount", "paymentMethod", "repayAmountChinese", "repayAmount", "repayMethod", "platform", "remark"]
-            for (const key in data) {
-                let tempData = data[key]
-                tempData.amountChinese = digitUppercase(tempData.amount ?? 0)
-                tempData.repayAmountChinese = digitUppercase(tempData.repayAmount ?? 0)
-                sheetData.push(tempData)
-            }
-        } else {
-            sheetHeader = ["序号", "姓名", "收礼金额大写", "收礼金额", "收礼方式", "收礼方", "备注"]
-            sheetFilter = ["id", "name", "amountChinese", "amount", "paymentMethod", "platform", "remark"]
-            for (const key in data) {
-                let tempData = data[key]
-                tempData.amountChinese = digitUppercase(tempData.amount ?? 0)
-                delete tempData.repayAmount
-                delete tempData.repayMethod
-                sheetData.push(tempData)
-            }
-        }
-        setPdfDocument(<PDFDocument filter={sheetFilter} header={sheetHeader} data={sheetData}/>)
-        ReactDOM.render(<PDFDocument filter={sheetFilter} header={sheetHeader} data={sheetData}/>,document.getElementById("draw"))
-        console.log('pdfDocument',pdfDocument)
-    }
-
     const resetData = () => {
         const resetDialog = DialogPlugin({
             header: '请确认',
             body: '点击确认将会删除当前记录的所有数据！',
             onConfirm: () => {
-                localStorage.clear();
+                setLocalstorageItem('pageData','[]');
                 NotificationPlugin.success({
                     title: '成功',
                     content: '数据清空完成',
                 })
-                setFlushTsNow()
                 resetDialog.hide()
             },
             onCancel: () => {
@@ -179,9 +125,9 @@ function App() {
                 </span>
                 <Button
                     style={{marginLeft: '8px'}}
-                    onClick={exportData}
+                    onClick={exportExcel}
                 >导出数据</Button>
-                <PDFDownloadLink document={pdfDocument} onClick={exportBook} fileName="礼金簿.pdf">
+                <PDFDownloadLink document={<PDFDocument  data={exportData[2] ?? []} filter={exportData[1] ?? []} header={exportData[0] ?? []}/>}  fileName="礼金簿.pdf">
                     <Button
                         style={{marginLeft: '8px'}}
                     >导出礼金簿</Button>
@@ -190,11 +136,11 @@ function App() {
             </div>
             <Collapse>
                 <CollapsePanel header="新增收费记录">
-                    <WriteData setFlushTs={setFlushTsNow} ts={flushTs}/>
+                    <WriteData/>
                 </CollapsePanel>
             </Collapse>
-            <DataTable ts={flushTs}/>
-            <div id="draw" ></div>
+            <DataTable />
+            {/*<div id="draw"><PDFDocument  data={exportData[2] ?? []} filter={exportData[1] ?? []} header={exportData[0] ?? []}/></div>*/}
         </>
     );
 }

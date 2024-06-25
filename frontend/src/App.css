@@ -1,42 +1,3 @@
-.App {
-    text-align: center;
-}
-
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
-}
-
-.App-header {
-    background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-}
-
-.App-link {
-    color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
 .money-display {
     margin-left: 10px;
 }
@@ -55,22 +16,36 @@ Document {
     padding: 0 20px 0 20px;
 }
 
-.table-header {
+.table-header td{
+    writing-mode: horizontal-tb;
     color: darkgreen;
     font-weight: bold;
+    font-size: medium;
+    height:10mm;
+    word-wrap: break-word;
+    word-break: break-word;
+    text-align: center;
 }
 
-.table-content {
+.table-content td{
+    text-align: center;
     color: black;
+    font-size: x-small;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 
 .pdf-table td {
-    width: 25mm;
-    writing-mode: vertical-lr;
-    border: 1px solid darkgreen;
-    padding: 3px 5px 3px 5px;
+    width: 29mm;
+    border: 2px solid darkgreen;
+    /*padding: 3px 5px 3px 5px;*/
 }
 
 .pdf-table .id,.pdf-table .amount,.pdf-table .repayAmount {
-    transform: rotate(-90deg);
+    writing-mode: horizontal-tb;
+    text-align: center;
+}
+
+.pdf-table .remark {
+    font-size: xx-small;
 }

@@ -1,23 +1,27 @@
 import {Button, Card, Form, Input, Select, Space, Textarea} from "tdesign-react";
 import FormItem from "tdesign-react/es/form/FormItem";
-import {useEffect, useState} from "react";
+import { useState} from "react";
+import {setLocalstorageItem} from "../common/utils";
 
-const WriteData = ({setFlushTs,ts}: { setFlushTs: any,ts:number }) => {
+const WriteData = () => {
     const [platformOption, setPlatformOption] = useState<{ label: string, value: string }[]>([])
     const [needRepay, setNeedRepay] = useState(false)
     const [form] = Form.useForm();
 
-    useEffect(() => {
-        const spo = localStorage.getItem("platformOption") ?? '[]'
-        setPlatformOption(JSON.parse(spo))
 
-        // 设置是否需要返礼
-        if (localStorage.getItem('needRepay') === 'true') {
-            setNeedRepay(true)
-        } else {
-            setNeedRepay(false)
+    window.addEventListener('storage',(event) => {
+        switch(event.key) {
+            case 'platformOption':
+                setPlatformOption(JSON.parse(event.newValue ?? '[]'))
+                break
+            case 'needRepay':
+                if (event.newValue === 'true') {
+                    setNeedRepay(true)
+                } else {
+                    setNeedRepay(false)
+                }
         }
-    }, [ts])
+    })
 
 
     const onSubmit = (e: any) => {
@@ -25,8 +29,8 @@ const WriteData = ({setFlushTs,ts}: { setFlushTs: any,ts:number }) => {
         e.fields.id = data.length + 1
         e.fields.amount = parseInt(e.fields.amount ?? 0)
         e.fields.repayAmount = parseInt(e.fields.repayAmount ?? 0)
-        localStorage.setItem('pageData', JSON.stringify(data.concat([e.fields])))
-        setFlushTs();
+        data.push(e.fields)
+        setLocalstorageItem('pageData', JSON.stringify(data))
         form.reset();
     }
 
@@ -36,7 +40,7 @@ const WriteData = ({setFlushTs,ts}: { setFlushTs: any,ts:number }) => {
                 return
             }
         }
-        localStorage.setItem('platformOption', JSON.stringify(platformOption.concat([{value, label: value}])))
+        setLocalstorageItem('platformOption', JSON.stringify(platformOption.concat([{value, label: value}])))
         setPlatformOption(platformOption.concat([{value, label: value}]))
     }
     return (<>
